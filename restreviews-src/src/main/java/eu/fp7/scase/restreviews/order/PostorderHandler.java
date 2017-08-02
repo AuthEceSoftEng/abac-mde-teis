@@ -78,7 +78,7 @@ public class PostorderHandler{
 
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else{
 	    	//decode the auth header
@@ -101,7 +101,7 @@ public class PostorderHandler{
 			  oJavaorderModel.setaccountId(this.oAuthenticationAccount.getaccountId());
         	  return createHypermedia(oHibernateController.postorder(oJavaorderModel));
     	}else{
-    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}		
     }
 

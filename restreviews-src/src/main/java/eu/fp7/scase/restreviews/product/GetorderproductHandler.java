@@ -81,14 +81,14 @@ public class GetorderproductHandler{
 
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else if(authHeader.equalsIgnoreCase("guest")){ //if guest and authentication mode are allowed, check if the request originates from a guest user
 	    	if (pdp.getPermission("product", Integer.toString(oJavaproductModel.getproductId()), null, Action.GET)
 					.equals(AuthorizationResultCode.PERMIT)){
 	        	return createHypermedia(oHibernateController.getproduct(oJavaproductModel));
 	    	}else{
-	    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+	    		throw new WebApplicationException(Response.Status.FORBIDDEN);
 	    	}			
 		}
 		else{
@@ -111,7 +111,7 @@ public class GetorderproductHandler{
 				.equals(AuthorizationResultCode.PERMIT)){
         	return createHypermedia(oHibernateController.getproduct(oJavaproductModel));
     	}else{
-    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}		
 	}
 

@@ -72,14 +72,14 @@ public class PostaccountHandler{
 
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else if(authHeader.equalsIgnoreCase("guest")){ //if guest and authentication mode are allowed, check if the request originates from a guest user
 	    	if (pdp.getPermission("account", null, null, oJavaaccountModel, Action.POST)
 					.equals(AuthorizationResultCode.PERMIT)){
 	        	return createHypermedia(oHibernateController.postaccount(oJavaaccountModel));
 	    	}else{
-	    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+	    		throw new WebApplicationException(Response.Status.FORBIDDEN);
 	    	}			
 		}
 		else{
@@ -102,7 +102,7 @@ public class PostaccountHandler{
 				.equals(AuthorizationResultCode.PERMIT)){
         	  return createHypermedia(oHibernateController.postaccount(oJavaaccountModel));
     	}else{
-    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}		
     }
 

@@ -80,14 +80,14 @@ public class GetreviewHandler{
 
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else if(authHeader.equalsIgnoreCase("guest")){ //if guest and authentication mode are allowed, check if the request originates from a guest user
 	    	if (pdp.getPermission("review", Integer.toString(oJavareviewModel.getreviewId()), null, Action.GET)
 					.equals(AuthorizationResultCode.PERMIT)){
 	        	return createHypermedia(oHibernateController.getreview(oJavareviewModel));
 	    	}else{
-	    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+	    		throw new WebApplicationException(Response.Status.FORBIDDEN);
 	    	}			
 		}
 		else{
@@ -110,7 +110,7 @@ public class GetreviewHandler{
 				.equals(AuthorizationResultCode.PERMIT)){
         	return createHypermedia(oHibernateController.getreview(oJavareviewModel));
     	}else{
-    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}		
     }
 

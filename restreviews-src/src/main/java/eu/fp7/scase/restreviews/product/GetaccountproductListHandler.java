@@ -75,7 +75,7 @@ public class GetaccountproductListHandler{
 
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else if(authHeader.equalsIgnoreCase("guest")){ //if guest and authentication mode are allowed, check if the request originates from a guest user
 			oJavaaccountModel = oHibernateController.getaccountproductList(oJavaaccountModel);

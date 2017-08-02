@@ -76,7 +76,7 @@ public class DeletereviewHandler{
 
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else{
 	    	//decode the auth header
@@ -97,7 +97,7 @@ public class DeletereviewHandler{
 				.equals(AuthorizationResultCode.PERMIT)){
         	return createHypermedia(oHibernateController.deletereview(oJavareviewModel));
     	}else{
-    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}		
 	}
 

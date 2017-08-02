@@ -76,7 +76,7 @@ public class DeleteaccountproductHandler{
  
     	//check if there is a non null authentication header
     	if(authHeader == null){
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
 		else{
 	    	//decode the auth header
@@ -98,7 +98,7 @@ public class DeleteaccountproductHandler{
 				.equals(AuthorizationResultCode.PERMIT)){
         	return createHypermedia(oHibernateController.deleteproduct(oJavaproductModel));
     	}else{
-    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}		
     }
 
