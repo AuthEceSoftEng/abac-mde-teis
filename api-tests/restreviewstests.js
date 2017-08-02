@@ -17,7 +17,7 @@ console.log("Get the list of accounts(guest)")
 request
   .get('/account')
   .set('Accept', 'application/json')
-  .expect(403)
+  .expect(401)
   .endAsync().then(res => {
     counter++;
     console.log(res.body);
@@ -50,7 +50,7 @@ request
     return request
       .get(`/account/${aid}`)
       .set('Accept', 'application/json')
-      .expect(403)
+      .expect(401)
       .endAsync();
   }).then(res => {
     counter++;
@@ -61,7 +61,7 @@ request
       .post('/account')
       .send({ email: casual.username, password: 'topsecret', role: 'manager' })
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -98,7 +98,7 @@ request
       .send({ email: casual.username, password: 'topsecret', role: 'manager' })
       .auth(email, password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -146,7 +146,7 @@ request
       .send({ email: casual.email, password: 'topsecret', role: 'customer' })
       .auth('manager@example.com', password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -170,7 +170,7 @@ request
       .put(`/account/${aid2}`)
       .send({ email: casual.email, password: 'topsecret', role: 'customer' })
       .set('Accept', 'application/json')
-      .expect(403)
+      .expect(401)
       .endAsync();
   }).then(res => {
     counter++;
@@ -204,7 +204,7 @@ request
       .send({ email: casual.email, password: 'topsecret', role: 'manager' })
       .auth(email2, password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -238,7 +238,7 @@ request
       .get(`/account/${aid2}`)
       .auth(email, password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -249,7 +249,7 @@ request
       .delete(`/account/${aid2}`)
       .auth(email, password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -260,7 +260,7 @@ request
       .delete(`/account/${aid2}`)
       .auth(email2, password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -270,7 +270,7 @@ request
     return request
       .delete(`/account/${aid2}`)
       .set('Accept', 'application/json')
-      .expect(403)
+      .expect(401)
       .endAsync();
   }).then(res => {
     counter++;
