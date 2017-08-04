@@ -5,11 +5,19 @@ var casual = require('casual');
 
 request = request('http://localhost:8080/restreviews/api');
 
-let aid = null;
-let aid2 = null;
-let pid = null;
+let aid = null; //customer
+let aid2 = null; //to be deleted
+let aid3 = null; //customer
+let pid = null; //draft
+let pid2 = null; //available
+let pid3 = null; //to be deleted
+let oid = null; //to be deleted
+let rid = null;
+let rid2 = null;
 let email = null;
 let email2 = null;
+let email3 = null;
+let managerEmail = 'manager@example.com'
 let password = 'topsecret';
 let counter = 0;
 
@@ -35,6 +43,19 @@ request
     aid = res.body.accountId;
     email = res.body.email;
     console.log(`POST /account: ${res.status}\n\n`);
+  console.log("Create an account(guest")
+  return request
+    .post('/account')
+    .send({ email: casual.email, password: 'topsecret', role: 'customer' })
+    .set('Accept', 'application/json')
+    .expect(200)
+    .endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  aid3 = res.body.accountId;
+  email3 = res.body.email;
+  console.log(`POST /account: ${res.status}\n\n`);
     console.log("Get own account")
     return request
       .get(`/account/${aid}`)
@@ -122,7 +143,7 @@ request
       .send({ email: casual.email, password: 'topsecret', role: 'customer' })
       .auth(email2, password)
       .set('Accept', 'application/json')
-      .expect(401)
+      .expect(403)
       .endAsync();
   }).then(res => {
     counter++;
@@ -287,418 +308,843 @@ request
     counter++;
     console.log(res.body);
     console.log(`DELETE /account/${aid2} ${res.status}\n\n`); 
-//     console.log("Update an account with non-existing auth:")
-//     return request
-//       .put('/account/1')
-//       .send({ username: casual.username, password: 'topsecret', email: casual.email, role: 'manager' })
-//       .auth('kanny', 'topsecret')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`PUT /account/1 ${res.status}\n\n`);
-//     console.log("Delete an account/guest")
-//     return request
-//       .delete('/account/1')
-//       .set('Accept', 'application/json')
-//       .expect(403)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`DELETE /account/1 ${res.status}\n\n`);
-//     console.log("Delete an account with wrong existing auth")
-//     return request
-//       .delete('/account/1')
-//       .set('Accept', 'application/json')
-//       .auth('Niko_Nicolas', 'topsecret')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`DELETE /account/1 ${res.status}\n\n`);
-//     console.log("Delete an account with non-existing auth")
-//     return request
-//       .delete('/account/1')
-//       .set('Accept', 'application/json')
-//       .auth('kanny', 'topsecret')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`DELETE /account/1 ${res.status}\n\n`);
-//     console.log("Create an account/guest")
-//     return request
-//       .post('/account')
-//       .send({ username: casual.username, password: 'topsecret', email: casual.email, role: 'manager' })
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account ${res.status}\n\n`);
-//     console.log("Create an account with non-existing auth:")
-//         aaid = res.body.accountId;
-//     ausername = res.body.username;
-//     return request
-//       .post('/account')
-//       .send({ username: casual.username, password: 'topsecret', email: casual.email, role: 'manager' })
-//       .auth('manny', 'topsecret')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account ${res.status}\n\n`);
-//     console.log("Get accounts with auth:")
-//     return request
-//       .get('/account')
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account ${res.status}\n\n`);
-//     console.log("Get accounts with incorrect auth:")
-//     return request
-//       .get('/account')
-//       .auth('bad', 'bad')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account ${res.status}\n\n`);
-//     console.log("Create an account with correct auth:")
-//     return request
-//       .post('/account')
-//       .send({ username: casual.username, password: 'topsecret', email: casual.email, role: 'manager' })
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account ${res.status}\n\n`);
-//     console.log("Update an account with correct auth:")
-//     return request
-//       .put(`/account/${aaid}`)
-//       .send({ username: casual.username, password: 'topsecret', email: casual.email, role: 'manager' })
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     ausername = res.body.username;
-//     console.log(res.body);
-//     console.log(`PUT /account/${aaid} ${res.status}\n\n`);
-//     console.log("Update an account with incorrect auth")
-//     return request
-//       .put(`/account/${aaid}`)
-//       .send({ username: casual.username, password: 'topsecret', email: casual.email, role: 'manager' })
-//       .auth('manny', 'topsecret')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`PUT /account/${aaid} ${res.status}\n\n`);
-//     console.log("Delete an account with incorrect auth:")
-//     return request
-//       .delete(`/account/${aaid}`)
-//       .auth('danny', 'topsecret')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`DELETE /account/${aaid} ${res.status}\n\n`);
-//     console.log("Delete an account with correct auth:")
-//     return request
-//       .delete(`/account/${aaid}`)
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`DELETE /account/${aaid} ${res.status}\n\n`);
-//     console.log("Get an account with correct auth:")
-//     ausername = 'Davon.Wolff';
-//     aaid = 1;
-//     return request
-//       .get(`/account/${aaid}`)
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     aaid = res.body.accountId;
-//     ausername = res.body.username;
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid} ${res.status}\n\n`);
-//     console.log("Get bookmarks of an account with correct auth")
-//     return request
-//       .get(`/account/${aaid}/bookmark`)
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Get a non-existent bookmark of an account with correct auth:")
-//     return request
-//       .get(`/account/${aaid}/bookmark/10`)
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks/10 ${res.status}\n\n`);
-//     console.log("Get a existing bookmark/guest")
-//     return request
-//       .get(`/account/${aaid}/bookmark/10`)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks/10 ${res.status}\n\n`);
-//     console.log("Get a existing bookmark of an account with guest")
-//     return request
-//       .get(`/account/${aaid}/bookmark/11`)
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks/11 ${res.status}\n\n`);
-//     console.log("Get bookmarks of an account with incorrect auth:")
-//     return request
-//       .get(`/account/${aaid}/bookmark`)
-//       .auth(ausername, 'topsecret2')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmark ${res.status}\n\n`);
-//     console.log("Get bookmarks of another account with correct auth:")
-//     return request
-//       .get('/account/2/bookmark')
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Get bookmarks of another account as guest:")
-//     return request
-//       .get('/account/2/bookmark')
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Get bookmarks of account as non-existing user")
-//     return request
-//       .get(`/account/${aaid}/bookmark`)
-//       .auth('Jerde_Melyssa', 'topsecret')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Create a bookmark with incorrect auth:")
-//     return request
-//       .post(`/account/${aaid}/bookmark`)
-//       .auth('Jerde_Melyssa', 'topsecret')
-//       .send({ scope: 'public', url: 'http://example.com', keyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Create a private bookmark with correct auth:")
-//     return request
-//       .post(`/account/${aaid}/bookmark`)
-//       .auth(ausername, apassword)
-//       .send({ scope: 'private', url: 'http://example.com', keyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Create a public bookmark with correct auth:")
-//     return request
-//       .post(`/account/${aaid}/bookmark`)
-//       .auth(ausername, apassword)
-//       .send({ scope: 'public', url: 'http://example.com', keyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     abid = res.body.bookmarkId;
-//     console.log(res.body);
-//     console.log(`POST /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Update a bookmark with correct auth:")
-//     return request
-//       .put(`/account/${aaid}/bookmark/${abid}`)
-//       .auth(ausername, apassword)
-//       .send({ scope: 'private', url: 'http://example.com', keyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     abid = res.body.bookmarkId;
-//     console.log(res.body);
-//     console.log(`PUT /account/${aaid}/bookmarks/${abid} ${res.status}\n\n`);
-//     console.log("Create a public bookmark with correct auth:")
-//     return request
-//       .post(`/account/${aaid}/bookmark`)
-//       .auth(ausername, apassword)
-//       .send({ scope: 'public', url: 'http://example.com/1', keyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Create a public bookmark with correct auth:")
-//     return request
-//       .post(`/account/${aaid}/bookmark`)
-//       .auth(ausername, apassword)
-//       .send({ scope: 'private', url: 'http://example.com/2', keyworkd: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     let bid = res.body.bookmarkId;
-//     console.log(res.body);
-//     console.log(`POST /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Delete a bookmark with correct auth:")
-//     return request
-//       .delete(`/account/${aaid}/bookmark/${bid}`)
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     let bid = res.body.bookmarkId;
-//     console.log(res.body);
-//     console.log(`DELETE /account/${aaid}/bookmark/${bid} ${res.status}\n\n`);
-//     console.log("Get bookmarks with existing owner's auth")
-//     return request
-//       .get(`/account/${aaid}/bookmark`)
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Update bookmark with existing incorrect auth")
-//     return request
-//       .put(`/account/${aaid}/bookmark/${abid}`)
-//       .auth('Henriette_Dicki', 'topsecret')
-//       .send({ scope: 'private', url: 'http://example.com', keyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`PUT /account/${aaid}/bookmark/${abid} ${res.status}\n\n`);
-//     console.log("Create bookmakr non-existing auth")
-//     return request
-//       .post(`/account/${aaid}/bookmark`)
-//       .auth('Henriette_Dicki', 'topsecret')
-//       .send({ scope: 'public', url: 'http://example.com/1'})
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`POST /account/${aaid}/bookmarks ${res.status}\n\n`);
-//     console.log("Delete bookmark non-existing auth");
-//     return request
-//       .delete(`/account/${aaid}/bookmark/${abid}`)
-//       .auth('Henriette_Dicki', 'topsecret')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`DELETE /account/${aaid}/bookmark/${abid} ${res.status}\n\n`);
-//     console.log("Search existing auth")
-//     return request
-//       .get('/AlgobookmarkSearch')
-//       .query({searchBookmarkKeyword: true, searchKeyword: 'cat'})
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body.linklist.length);
-//     console.log(`GET /AlgobookmarkSearch auth ${res.status}\n\n`);
-//     console.log("Search non-existing auth")
-//     return request
-//       .get('/AlgobookmarkSearch')
-//       .query({searchBookmarkKeyword: true, searchKeyword: 'cat'})
-//       .auth('Jerde_Melyssa', 'topsecrets')
-//       .set('Accept', 'application/json')
-//       .expect(401)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body);
-//     console.log(`GET /AlgobookmarkSearch failed-auth ${res.status}\n\n`);
-//     console.log("Search guest")
-//     return request
-//       .get('/AlgobookmarkSearch')
-//       .query({searchBookmarkKeyword: true, searchKeyword: 'cat'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body.linklist.length);
-//     console.log(`GET /AlgobookmarkSearch no-auth ${res.status}\n\n`);
-//     console.log("Search existing auth, no results")
-//     return request
-//       .get('/AlgobookmarkSearch')
-//       .query({searchBookmarkKeyword: true, searchKeyword: 'dog'})
-//       .auth(ausername, apassword)
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body)
-//     console.log(`GET /AlgobookmarkSearch auth-no-results ${res.status}\n\n`);
-//     console.log("Search guest, no results")
-//     return request
-//       .get('/AlgobookmarkSearch')
-//       .query({searchBookmarkKeyword: true, searchKeyword: 'dog'})
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body)
-//     console.log(`GET /AlgobookmarkSearch no-auth-no-results ${res.status}\n\n`);
-//     console.log("Search guest, no keyword")
-//     return request
-//       .get('/AlgobookmarkSearch')
-//       .query({searchBookmarkKeyword: true})
-//       .set('Accept', 'application/json')
-//       .expect(500)
-//       .endAsync();
-//   }).then(res => {
-//     console.log(res.body)
-//     console.log(`GET /AlgobookmarkSearch empty-keyword ${res.status}\n\n`);
+	console.log(`PRODUCT TESTING BEGINS HERE ----------------------`);
+	console.log(`Create a product as guest`)
+	return request
+    	.post('/multiproductManager/account/1/product')
+		.send({ cost: 10.5, description: 'The best product to date!', status: 'draft', title: 'Product1' })
+		.set('Accept', 'application/json')
+		.expect(401)
+		.endAsync();
+  }).then(res => {
+    counter++;
+    console.log(res.body);
+    console.log(`/multiproductManager/account/1/product ${res.status}\n\n`); 
+	
+	console.log(`Create a product as customer`)
+	return request
+  		.post('/multiproductManager/account/1/product')
+		.send({ cost: 10.5, description: 'The best product to date!', status: 'draft', title: 'Product1' })
+		.auth(email, password)
+		.set('Accept', 'application/json')
+		.expect(403)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product ${res.status}\n\n`); 	
+	
+	console.log(`Create a draft product as manager`)
+	return request
+  		.post('/multiproductManager/account/1/product')
+		.send({ cost: 10.5, description: 'The best product to date!', status: 'draft', title: 'Product1' })
+		.auth(managerEmail, password)
+		.set('Accept', 'application/json')
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		pid = res.body.productId;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product ${res.status} create product with id ${pid}\n\n`); 	
+	
+	console.log(`Create a 2nd draft product as manager`)
+	return request
+  		.post('/multiproductManager/account/1/product')
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'draft', title: 'Product2' })
+		.auth(managerEmail, password)
+		.set('Accept', 'application/json')
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		pid2 = res.body.productId;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product ${res.status} create product with id ${pid2}\n\n`); 
+		
+	console.log(`Create a 3rd draft product as manager`)
+	return request
+  		.post('/multiproductManager/account/1/product')
+		.send({ cost: 12.5, description: 'The 3rd best product to date!', status: 'draft', title: 'Product3' })
+		.auth(managerEmail, password)
+		.set('Accept', 'application/json')
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		pid3 = res.body.productId;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product ${res.status} create product with id ${pid3}\n\n`); 	
+	
+	console.log(`Get a product as guest`)
+	return request
+  		.get(`/multiproduct/account/1/product/${pid}`)
+		.set('Accept', 'application/json')
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status}\n\n`); 
+	
+	console.log(`Get a draft product as customer`)
+	return request
+  		.get(`/multiproduct/account/1/product/${pid}`)
+		.set('Accept', 'application/json')
+		.auth(email, password)
+		.expect(403)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status}\n\n`); 	
+		
+	console.log(`Get a draft product as manager`)
+	return request
+  		.get(`/multiproduct/account/1/product/${pid}`)
+		.set('Accept', 'application/json')
+		.auth(managerEmail, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status}\n\n`); 
+		
+	console.log(`Update a draft product as guest`)
+	return request
+  		.put(`/multiproduct/account/1/product/${pid2}`)
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'available', title: 'Product12' })
+		.set('Accept', 'application/json')
+		.expect(401)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status} \n\n`); 	
+		
+	console.log(`Update a draft product as customer`)
+	return request
+  		.put(`/multiproduct/account/1/product/${pid2}`)
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'available', title: 'Product12' })
+		.set('Accept', 'application/json')
+		.auth(email, password)
+		.expect(403)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status} \n\n`); 	
+		
+	console.log(`Update a draft product as manager`)
+	return request
+  		.put(`/multiproduct/account/1/product/${pid2}`)
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'available', title: 'Product2' })
+		.set('Accept', 'application/json')
+		.auth(managerEmail, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid2} ${res.status} \n\n`); 		
+				
+	console.log(`Update an available product as guest`)
+	return request
+  		.put(`/multiproduct/account/1/product/${pid2}`)
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'available', title: 'Product12' })
+		.set('Accept', 'application/json')
+		.expect(401)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status} \n\n`); 	
+		
+	console.log(`Update an available product as customer`)
+	return request
+  		.put(`/multiproduct/account/1/product/${pid2}`)
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'available', title: 'Product12' })
+		.set('Accept', 'application/json')
+		.auth(email, password)
+		.expect(403)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid} ${res.status} \n\n`); 	
+		
+	console.log(`Update an available product as manager`)
+	return request
+  		.put(`/multiproduct/account/1/product/${pid2}`)
+		.send({ cost: 12.5, description: 'The 2nd best product to date!', status: 'available', title: 'Product2' })
+		.set('Accept', 'application/json')
+		.auth(managerEmail, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid2} ${res.status} \n\n`); 	
+				
+	console.log(`Get an available product as guest`)
+	return request
+  		.get(`/multiproduct/account/1/product/${pid2}`)
+		.set('Accept', 'application/json')
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid2} ${res.status}\n\n`); 
+	
+	console.log(`Get an available product as customer`)
+	return request
+  		.get(`/multiproduct/account/1/product/${pid2}`)
+		.set('Accept', 'application/json')
+		.auth(email, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid2} ${res.status}\n\n`); 	
+		
+	console.log(`Get an available product as manager`)
+	return request
+  		.get(`/multiproduct/account/1/product/${pid2}`)
+		.set('Accept', 'application/json')
+		.auth(managerEmail, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid2} ${res.status}\n\n`);		
+		
+		
+	console.log(`Get list of products as guest`)
+	return request
+  		.get(`/multiproductManager/account/1/product/`)
+		.set('Accept', 'application/json')
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product/ ${res.status} \n\n`); 
+		
+	console.log(`Get list of products as customer`)
+	return request
+  		.get(`/multiproductManager/account/1/product/`)
+		.set('Accept', 'application/json')
+		.auth(email, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product/ ${res.status} \n\n`); 
+		
+	console.log(`Get list of products as manager`)
+	return request
+  		.get(`/multiproductManager/account/1/product/`)
+		.set('Accept', 'application/json')
+		.auth(managerEmail, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproductManager/account/1/product/ ${res.status} \n\n`); 
+		
+	console.log(`Delete product as guest`)
+	return request
+  		.delete(`/multiproduct/account/1/product/${pid3}`)
+		.set('Accept', 'application/json')
+		.expect(401)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid3} ${res.status} \n\n`);
+		
+	console.log(`Delete product as customer`)
+	return request
+  		.delete(`/multiproduct/account/1/product/${pid3}`)
+		.set('Accept', 'application/json')
+		.auth(email, password)
+		.expect(403)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid3} ${res.status} \n\n`);
+		
+	console.log(`Delete product as manager`)
+	return request
+  		.delete(`/multiproduct/account/1/product/${pid3}`)
+		.set('Accept', 'application/json')
+		.auth(managerEmail, password)
+		.expect(200)
+		.endAsync();
+	}).then(res => {
+		counter++;
+		console.log(res.body);
+		console.log(`/multiproduct/account/1/product/${pid3} ${res.status} \n\n`);
+		
+		console.log('FROM HERE BEGINS ORDER TESTING\n\n');
+		
+	console.log(`Create an order as guest`)
+	return request
+    	.post('/account/1/order')
+		.send({ discountCoupon: 'none', orderDate: '2017-07-20 20:24:33.2'})
+		.set('Accept', 'application/json')
+		.expect(401)
+		.endAsync();
+  }).then(res => {
+    counter++;
+    console.log(res.body);
+    console.log(`/account/1/order ${res.status}\n\n`); 
+	
+console.log(`Create an order as manager`)
+return request
+  	.post('/account/1/order')
+	.send({ discountCoupon: 'none', orderDate: '2017-07-20 20:24:33.2'})
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/1/order ${res.status}\n\n`); 
+  
+console.log(`Create an order as customer`)
+return request
+  	.post(`/account/${aid}/order`)
+	.send({ discountCoupon: 'none', orderDate: '2017-07-20 20:24:33.2'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  oid = res.body.orderId;
+  console.log(res.body);
+  console.log(`/account/${aid}/order ${res.status}\n\n`); 
+  
+console.log(`Update an order as guest`)
+return request
+  	.put(`/account/${aid}/order/${oid}`)
+	.send({ discountCoupon: 'none', orderDate: '2017-07-20 20:24:33.2'})
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Update an order as manager`)
+return request
+  	.put(`/account/${aid}/order/${oid}`)
+	.send({ discountCoupon: 'none', orderDate: '2017-07-20 20:24:33.2'})
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Update an order as customer who is not owner`)
+return request
+  	.put(`/account/${aid}/order/${oid}`)
+	.send({ discountCoupon: 'none', orderDate: '2017-07-20 20:24:33.2'})
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Update an order as owner`)
+return request
+  	.put(`/account/${aid}/order/${oid}`)
+	.send({ discountCoupon: 'souperCoupon', orderDate: '2017-07-20 20:24:33.2'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+
+  
+console.log(`Get an order as guest`)
+return request
+  	.get(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Get an order as customer who is not owner`)
+return request
+  	.get(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Get an order as customer who is the owner`)
+return request
+  	.get(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Get an order as manager`)
+return request
+  	.get(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Delete an order as guest`)
+return request
+  	.delete(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+ 
+  
+console.log(`Delete an order as customer who is not owner`)
+return request
+  	.delete(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Delete an order as owner`)
+return request
+  	.delete(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+  
+console.log(`Delete an order as manager`)
+return request
+  	.delete(`/account/${aid}/order/${oid}`)
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/account/${aid}/order/${oid} ${res.status}\n\n`); 
+	
+	
+console.log('FROM HERE BEGINS REVIEW TESTING\n\n');
+	
+console.log(`Create a review as guest on a draft product`)
+return request
+  	.post(`/product/${pid}/review`)
+	.send({ title: 'Solid choice', description: 'I have been owner for 4 weeks without issues so far!'})
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review ${res.status}\n\n`); 
+  
+console.log(`Create a review as customer on a draft product`)
+return request
+  	.post(`/product/${pid}/review`)
+	.send({ title: 'Solid choice', description: 'I have been owner for 4 weeks without issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review ${res.status}\n\n`); 
+  
+console.log(`Create a review as manager on a draft product`)
+return request
+  	.post(`/product/${pid}/review`)
+	.send({ title: 'Solid choice', description: 'I have been owner for 4 weeks without issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review ${res.status}\n\n`); 
+  
+console.log(`Update a product as manager to be available for reviews`)
+return request
+	.put(`/multiproduct/account/1/product/${pid}`)
+	.send({ cost: 10, description: 'The best product to date!', status: 'available', title: 'Product1' })
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+	counter++;
+	console.log(res.body);
+	console.log(`/multiproduct/account/1/product/${pid} ${res.status} \n\n`); 
+  
+console.log(`Create a review as guest on an available product`)
+return request
+  	.post(`/product/${pid2}/review`)
+	.send({ title: 'Solid choice', description: 'I have been owner for 4 weeks without issues so far!'})
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review ${res.status}\n\n`); 
+  
+console.log(`Create a review as manager on an available product`)
+return request
+  	.post(`/product/${pid2}/review`)
+	.send({ title: 'Solid choice', description: 'I have been owner for 4 weeks without issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review ${res.status}\n\n`); 
+  
+console.log(`Create a review as customer on an available product`)
+return request
+  	.post(`/product/${pid2}/review`)
+	.send({ title: 'Solid choice', description: 'I have been owner for 4 weeks without issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  rid = res.body.reviewId;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review ${res.status}\n\n`); 
+  
+  
+console.log(`Create a 2nd review as customer on an available product`)
+return request
+  	.post(`/product/${pid}/review`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  rid2 = res.body.reviewId;
+  console.log(res.body);
+  console.log(`/product/${pid}/review ${res.status}\n\n`); 
+  
+console.log(`Update a product as manager to be draft and not available for reviews`)
+return request
+	.put(`/multiproduct/account/1/product/${pid}`)
+	.send({ cost: 10, description: 'The best product to date!', status: 'draft', title: 'Product1' })
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+	counter++;
+	console.log(res.body);
+	console.log(`/multiproduct/account/1/product/${pid} ${res.status} \n\n`); 
+  
+console.log(`Get a review as guest on a draft product`)
+return request
+  	.get(`/product/${pid}/review/${rid2}`)
+	.set('Accept', 'application/json')
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Get a review as customer who is not owner of the review on a draft product`)
+return request
+  	.get(`/product/${pid}/review/${rid2}`)
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Get a review as owner of the review on a draft product`)
+return request
+  	.get(`/product/${pid}/review/${rid2}`)
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Get a review as manager on a draft product`)
+return request
+  	.get(`/product/${pid}/review/${rid2}`)
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Get a review as guest on an available product`)
+return request
+  	.get(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Get a review as customer who is not owner of the review on an available product`)
+return request
+  	.get(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Get a review as owner of the review on an available product`)
+return request
+  	.get(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Get a review as manager on an available product`)
+return request
+  	.get(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+    
+console.log(`Update a review as guest on a draft product`)
+return request
+  	.put(`/product/${pid}/review/${rid2}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Update a review as customer who is not owner of the review on a draft product`)
+return request
+  	.put(`/product/${pid}/review/${rid2}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Update a review as owner of the review on a draft product`)
+return request
+  	.put(`/product/${pid}/review/${rid2}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Update a review as manager on a draft product`)
+return request
+  	.put(`/product/${pid}/review/${rid2}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Update a review as guest on an available product`)
+return request
+  	.put(`/product/${pid2}/review/${rid}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Update a review as customer who is not owner of the review on an available product`)
+return request
+  	.put(`/product/${pid2}/review/${rid}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Update a review as owner of the review on an available product`)
+return request
+  	.put(`/product/${pid2}/review/${rid}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Update a review as manager on an available product`)
+return request
+  	.put(`/product/${pid2}/review/${rid}`)
+	.send({ title: 'Bad choice', description: 'I have been owner for 4 weeks, full of issues so far!'})
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+    
+console.log(`Delete a review as guest on an available product`)
+return request
+  	.delete(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.expect(401)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Delete a review as customer who is not owner of the review on an available product`)
+return request
+  	.delete(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.auth(email3, password)
+	.expect(403)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+  
+console.log(`Delete a review as owner of the review on an available product`)
+return request
+  	.delete(`/product/${pid}/review/${rid2}`)
+	.set('Accept', 'application/json')
+	.auth(email, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid}/review/${rid2} ${res.status}\n\n`); 
+  
+console.log(`Delete a review as manager on an available product`)
+return request
+  	.delete(`/product/${pid2}/review/${rid}`)
+	.set('Accept', 'application/json')
+	.auth(managerEmail, password)
+	.expect(200)
+	.endAsync();
+}).then(res => {
+  counter++;
+  console.log(res.body);
+  console.log(`/product/${pid2}/review/${rid} ${res.status}\n\n`); 
+	
     console.log("Tests completed: " + counter)
   }).catch((err, result) => {
     console.log("Tests completed: " + counter)
