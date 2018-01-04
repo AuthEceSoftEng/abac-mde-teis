@@ -17,6 +17,7 @@ validity of the authorization MDE mechanism
 - IoT-App-Definition.pdf: provides the definition of the IoT application referenced in the evaluation section of the manuscript.
 - Abac-metamodel-behavioral.pdf: provides the list with the ABAC meta-model principal behavioral constraints.
 - Ent-app-presentation.pdf: provides the overview of the Ent application referenced in the evaluation section of the manuscript.
+- MDEMigratorCIMMetamodel.ecore: the full Database Migration CIM meta-model.
 
 ## Running the tests
 
