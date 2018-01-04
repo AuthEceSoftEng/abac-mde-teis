@@ -15,6 +15,7 @@ validity of the authorization MDE mechanism
 - Resource-Rules.pdf: provides the list with all the defined ABAC rules for the resources of the RESTReviews Web Service.
 - RESTsec meta-models.pdf: provides the definition of PIM and PSM meta-models of the RESTsec system.
 - IoT-App-Definition.pdf: provides the definition of the IoT application referenced in the evaluation section of the manuscript.
+- Abac-metamodel-behavioral.pdf: provides the list with the ABAC meta-model principal behavioral constraints.
 
 ## Running the tests
 
